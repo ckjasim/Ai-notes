@@ -4,19 +4,34 @@ import Password from "../utils/password";
 import { CommonMessages, HttpStatusCode, sendResponse } from "../utils/send-response";
 import { CustomError } from "../utils/custom-error";
 
-export const verifyExistingUser = async (
+
+export const loginUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { email,mobile } = req.body;
-    const existingUser = await userService.findUserByEmailOrMobile(email,mobile);
-    if (existingUser) {
-      throw new CustomError("User already exists in this email or mobile number !", 400);
-    }else{
-       sendResponse(res, HttpStatusCode.CREATED, CommonMessages.VERIFIED)
+    console.log(req.body)
+    const { email,password } = req.body
+
+
+    const existingUser = await userService.findUserByEmail(email);
+    console.log('jjjjjjjjjjjjj')
+    console.log(existingUser,'ddddddd')
+    if (!existingUser) {
+      throw new CustomError("User not exists! Please signup", 400);
     }
+
+    const hashedPassword = await Password.compare(existingUser.password,password);
+    if (!hashedPassword) {
+      throw new CustomError("Invalid Password", 400);
+    }
+
+ 
+    sendResponse(res, HttpStatusCode.VERIFIED, CommonMessages.SUCCESS, {
+      id: existingUser.id,
+      email: existingUser.email,
+    });
   } catch (error) {
     next(error);
   }
@@ -27,29 +42,25 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const { email,mobile,password } = req.body.signup;
-    const { title,fullName,dateOfBirth,currentAddress,addressDuration,aboutYourself } = req.body.personal;
-    const { employmentStatus,additionalInvestments } = req.body.financial;
+    console.log(req.body)
+    const { email,name,password } = req.body
 
-    const existingUser = await userService.findUserByEmailOrMobile(email,mobile);
+
+    const existingUser = await userService.findUserByEmail(email);
+    console.log('jjjjjjjjjjjjj')
     if (existingUser) {
-      throw new CustomError("User already exists in this email or mobile number !", 400);
+      throw new CustomError("User already exists in this email !", 400);
     }
+    console.log('jjjjjjjjjjjjj')
 
     const hashedPassword = await Password.toHash(password);
     const newUser = await userService.createUser({
       email,
       password: hashedPassword,
-      mobile,
-      title,
-      fullName,
-      dateOfBirth,
-      currentAddress,
-      addressDuration,
-      aboutYourself,
-      employmentStatus,
-      additionalInvestments
+      name
     });
+
+    console.log(newUser)
     sendResponse(res, HttpStatusCode.CREATED, CommonMessages.CREATED, {
       id: newUser.id,
       email: newUser.email,

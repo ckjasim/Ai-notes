@@ -9,51 +9,14 @@ const userSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    mobile: {
+    name: {
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     password: {
       type: String,
       required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    fullName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    dateOfBirth: {
-      type: String,
-      required: true,
-    },
-    currentAddress: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    addressDuration: {
-      type: String,
-      required: true,
-    },
-    aboutYourself: {
-      type: String,
-      trim: true,
-      maxlength: 2000,
-    },
-    employmentStatus: {
-      type: String,
-      required: true,
-    },
-    additionalInvestments: {
-      type: String,
-      trim: true,
     },
   },
   {
