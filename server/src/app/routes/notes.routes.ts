@@ -2,18 +2,23 @@ import express from "express";
 import { createUser, getUserData, loginUser} from "../controllers/users.controller";
 import {  userValidator } from "../utils/validators";
 import { validateRequest } from "../middlewares/validate-request";
+import { fetchNotes, saveNotes, updateNote, updatePosition } from "../controllers/notes.controller";
 
 const router = express.Router();
 
 
 router.post("/",
-    userValidator,
-    validateRequest,
-    createUser
+    saveNotes
 );
-router.post("/login",
-    loginUser
+router.get("/:id",
+    fetchNotes
+);
+router.put("/:id/position",
+    updatePosition
+);
+router.put("/:id",
+    updateNote
 );
 
 
-export {router as authRouter};
+export {router as notesRouter};
