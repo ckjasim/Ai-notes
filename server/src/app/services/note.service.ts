@@ -6,6 +6,9 @@ import { INoteService } from './note.service.interface';
 import { IUserService } from './user.service.interface';
 
 export class NoteService implements INoteService {
+async  deleteNoteById(id: string): Promise<any> {
+return await Note.deleteOne({_id:id})
+  }
 
   async updateNoteById(id: string, data: string): Promise<any> {
     return await Note.findOneAndUpdate(

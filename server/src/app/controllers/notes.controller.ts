@@ -53,6 +53,21 @@ console.log(r,'kjkjkjkjjjjjjjjjjjjjjjj')
     next(error);
   }
 };
+export const   deleteNote = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const {id}= req.params
+  const r =await noteService.deleteNoteById(id);
+
+  sendResponse(res, HttpStatusCode.OK, CommonMessages.SUCCESS, {});
+
+  } catch (error) {
+    next(error);
+  }
+};
 export const   updatePosition = async (
   req: Request,
   res: Response,
